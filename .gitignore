@@ -1,0 +1,179 @@
+# =============================================================================
+# .gitignore — WHITELIST-VORLAGE
+# =============================================================================
+# PRINZIP:
+#   1. Alles ignorieren  (Zeile: /*)
+#   2. Unterordner vom Ignorieren ausnehmen  (Zeile: !/*/)
+#   3. Gewünschte Dateien & Ordner explizit whitelisten
+#
+# WICHTIG:
+#   - Reihenfolge ist entscheidend! Git liest die Regeln von oben nach unten.
+#   - Um eine Datei in einem Unterordner freizugeben, MÜSSEN alle übergeordneten
+#     Verzeichnisse ebenfalls freigeschaltet sein (mit !ordner/).
+#   - Patterns ohne führenden Slash gelten rekursiv für alle Verzeichnisebenen.
+#   - Patterns mit führendem Slash gelten nur relativ zum Repository-Root.
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# SCHRITT 1 — Alles ignorieren
+# -----------------------------------------------------------------------------
+
+# Ignoriere alle Dateien im Root
+/*
+
+# Ignoriere alle Unterordner (überschreibt obige Regel für Verzeichnisse,
+# wird aber durch spätere Negations-Regeln wieder aufgehoben)
+# Hinweis: Git kann Dateien in ignorierten Ordnern nicht tracken. Deshalb
+# müssen Ordner IMMER explizit freigeschaltet werden, bevor Dateien darin
+# freigeschaltet werden können.
+
+
+# -----------------------------------------------------------------------------
+# SCHRITT 2 — Alle direkten Unterordner "durchlässig" machen
+#              (damit Git in sie "hineinsehen" kann)
+# -----------------------------------------------------------------------------
+
+# Alle Verzeichnisse auf Root-Ebene wieder aufheben ...
+!/*/
+
+# ... und auch tiefer verschachtelte Verzeichnisse generell durchlässig halten.
+# Diese Zeile ist nötig, damit Whitelist-Einträge in beliebig tiefen
+# Unterordnern funktionieren.
+!/**/**/
+
+
+# =============================================================================
+# WHITELIST — Hier die gewünschten Dateien & Ordner eintragen
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Einzelne Dateien im Root-Verzeichnis
+# -----------------------------------------------------------------------------
+!README.md
+!.gitignore
+!.editorconfig
+!.gitattributes
+
+# -----------------------------------------------------------------------------
+# Bestimmte Dateitypen überall im Projekt erlauben
+# (gilt rekursiv für alle Unterordner)
+# -----------------------------------------------------------------------------
+# Quellcode
+!*.ipynb
+
+# Konfigurationsdateien
+!*.json
+!*.yaml
+!*.yml
+!*.toml
+!*.ini
+!*.cfg
+!*.env.example
+
+# Dokumentation
+!*.md
+!*.rst
+!*.txt
+
+# Datengrundlagen
+!*.csv
+!*.xlsx
+
+# -----------------------------------------------------------------------------
+# Bestimmte Ordner komplett freischalten (inkl. aller Inhalte & Unterordner)
+# -----------------------------------------------------------------------------
+
+# Quellcode-Verzeichnis
+#!src/
+#!src/**
+
+# Tests
+#!tests/
+#!tests/**
+
+# Dokumentation
+#!docs/
+#!docs/**
+
+# Konfiguration
+#!config/
+#!config/**
+
+# Skripte
+#!scripts/
+#!scripts/**
+
+# CI/CD Konfiguration
+#!.github/
+#!.github/**
+#!.gitlab/
+#!.gitlab/**
+
+# -----------------------------------------------------------------------------
+# Bestimmte Dateien in spezifischen Unterordnern freischalten
+# -----------------------------------------------------------------------------
+
+# Nur die requirements-Datei im Projekt-Root
+#!/requirements.txt
+#!/requirements-dev.txt
+
+# Nur das Haupt-Makefile
+#!/Makefile
+
+# Docker-Konfiguration
+#!/Dockerfile
+#!/docker-compose.yml
+#!/docker-compose.override.yml
+#!.dockerignore
+
+
+# =============================================================================
+# BEISPIELE FÜR WEITERE ANWENDUNGSFÄLLE
+# =============================================================================
+
+# --- Beispiel A: Nur eine einzige Datei in einem tiefen Unterordner ---
+# Um z. B. nur "src/utils/helper.py" freizuschalten, braucht man:
+#
+#   !src/
+#   !src/utils/
+#   !src/utils/helper.py
+#
+# (Wenn "src/" und der Dateityp "*.py" schon oben stehen, reicht das bereits.)
+
+# --- Beispiel B: Einen Ordner inklusive aller Unterordner freischalten ---
+# !mein-ordner/
+# !mein-ordner/**
+
+# --- Beispiel C: Nur bestimmte Dateiendungen in einem Ordner erlauben ---
+# !assets/
+# !assets/*.png
+# !assets/*.svg
+# !assets/*.ico
+
+# --- Beispiel D: Versteckte Konfigurationsdateien (Dotfiles) ---
+# !.nvmrc
+# !.prettierrc
+# !.eslintrc.json
+# !.stylelintrc
+
+
+# =============================================================================
+# HÄUFIGE AUSNAHMEN — Dinge, die trotz Whitelist IMMER ignoriert bleiben sollen
+# =============================================================================
+
+# Auch wenn oben *.json erlaubt wurde — package-lock.json trotzdem ignorieren:
+# package-lock.json
+# yarn.lock
+
+# Sensible Dateien immer ignorieren (Sicherheit!):
+.env
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+
+# =============================================================================
+# ENDE DER VORLAGE
+# =============================================================================
